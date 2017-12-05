@@ -17,7 +17,7 @@ flag = 0
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array; 
-    if(flag < 50):
+    if(flag < 1):
         flag += 1
     else:
         process_frame_for_video(image)

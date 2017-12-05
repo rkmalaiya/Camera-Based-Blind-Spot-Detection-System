@@ -9,13 +9,14 @@ from keras.layers import Dense, Dropout, Activation
 from keras.optimizers import Adam
 from keras import utils
 from keras.models import load_model
+import time
 
 threshold = 10
 threshold += 5
 model = load_model('model.hdf5')
 areas = []
-orientations=16
-pixels_per_cell=8
+orientations=11
+pixels_per_cell=16
 cells_per_block=2
 colorspace = 'YCrCb' #'RGB'
 no_of_features = 1188
@@ -37,7 +38,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
         return features, hog_image
     # Otherwise call with one output
     else:      
-        print(pix_per_cell, cell_per_block,orient)
+        #print(pix_per_cell, cell_per_block,orient)
         features = hog(img, orientations=orient, 
                        pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block), 
@@ -49,8 +50,8 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
 # Define a single function that can extract features using hog sub-sampling and make predictions
 def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, orient, 
               pix_per_cell, cell_per_block, spatial_size, hist_bins, show_all_rectangles=False):
-   
-    print(ystart, ystop)
+       
+    #print(ystart, ystop)
     # array of rectangles where cars were detected
     rectangles = []
     
@@ -78,7 +79,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     if scale != 1:
         imshape = ctrans_tosearch.shape
         ctrans_tosearch = cv2.resize(ctrans_tosearch, (np.int(imshape[1]/scale), np.int(imshape[0]/scale)))
-    
+    #print(ctrans_tosearch.shape) 
     # select colorspace channel for HOG 
     if hog_channel == 'ALL':
         ch1 = ctrans_tosearch[:,:,0]
@@ -264,8 +265,8 @@ def process_frame_for_video(img):
     cell_per_block = cells_per_block
     hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
     
-    ystart = 450
-    ystop = 550
+    ystart = 350
+    ystop = 450
     scale = 1.5
 
     for i in range(0,100,2):
