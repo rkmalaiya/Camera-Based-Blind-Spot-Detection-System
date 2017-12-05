@@ -12,12 +12,12 @@ from keras.models import load_model
 
 threshold = 10
 threshold += 5
-model = load_model('dataset/model.hdf5')
+model = load_model('model.hdf5')
 areas = []
-orientations=11
-pixels_per_cell=16
+orientations=16
+pixels_per_cell=8
 cells_per_block=2
-colorspace = 'RGB'
+colorspace = 'YCrCb' #'RGB'
 no_of_features = 1188
 
 
@@ -28,6 +28,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                         vis=False, feature_vec=True):
     # Call with two outputs if vis==True
     if vis == True:
+        print(vis)
         features, hog_image = hog(img, orientations=orient, 
                                   pixels_per_cell=(pix_per_cell, pix_per_cell),
                                   cells_per_block=(cell_per_block, cell_per_block), 
@@ -36,6 +37,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
         return features, hog_image
     # Otherwise call with one output
     else:      
+        print(pix_per_cell, cell_per_block,orient)
         features = hog(img, orientations=orient, 
                        pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block), 
@@ -47,7 +49,8 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
 # Define a single function that can extract features using hog sub-sampling and make predictions
 def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, orient, 
               pix_per_cell, cell_per_block, spatial_size, hist_bins, show_all_rectangles=False):
-    
+   
+    print(ystart, ystop)
     # array of rectangles where cars were detected
     rectangles = []
     
@@ -216,11 +219,11 @@ def process_frame(img):
     cell_per_block = cells_per_block
     hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
 
-    ystart = 450
-    ystop = 550
+    ystart = 250
+    ystop = 350
     scale = 1.5
 
-    for i in range(0,100,2):
+    for i in range(0,50,2):
         #ystart += i
         #ystop += i
         rectangles.append(find_cars(test_img, ystart+i, ystop+i, scale, colorspace, hog_channel, model, None, 
