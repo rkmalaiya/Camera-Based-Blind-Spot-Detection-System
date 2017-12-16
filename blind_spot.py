@@ -272,6 +272,7 @@ def process_frame_for_video(img):
     for i in range(0,100,2):
         #ystart += i
         #ystop += i
+        print(img.shape)
         rectangles.append(find_cars(img, ystart+i, ystop+i, scale, colorspace, hog_channel, model, None, 
                            orient, pix_per_cell, cell_per_block, None, None))
     
