@@ -205,7 +205,7 @@ def draw_labeled_bboxes(img, labels):
         print ("Area: ", area)
         if("areas" in locals()):
             areas.append(area)
-        if (area > 9000):
+        if (area > 6000):
             cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
     # Return the image and final rectangles
     return img, rects
@@ -272,7 +272,7 @@ def process_frame_for_video(img):
     for i in range(0,100,2):
         #ystart += i
         #ystop += i
-        print(img.shape)
+        #print(img.shape)
         rectangles.append(find_cars(img, ystart+i, ystop+i, scale, colorspace, hog_channel, model, None, 
                            orient, pix_per_cell, cell_per_block, None, None))
     
