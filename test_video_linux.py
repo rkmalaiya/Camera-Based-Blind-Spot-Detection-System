@@ -20,3 +20,5 @@ def video_feed():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+    
+# Code executes in localhost:5000, check logs on terminal for more details

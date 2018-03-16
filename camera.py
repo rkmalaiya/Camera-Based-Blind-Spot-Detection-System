@@ -20,11 +20,43 @@ class VideoCamera(object):
         # We are using Motion JPEG, but OpenCV defaults to capture raw images,
         # so we must encode it into JPEG in order to correctly display the
         # video stream.
-        #ret, jpeg = cv2.imencode('.jpg', image)
-
-        if(self.flag < 200):
+      
+        ret, image = cv2.imencode('.jpg', image)
+        
+        if(self.flag < 500):
                 self.flag += 1
         else:
                 image=process_frame_for_video(image)
-        ret, jpeg = cv2.imencode('.jpg', image) 
-        return jpeg.tobytes()
+         
+        return image.tobytes()
+    
+    def display_frame(self):
+        # Read until video is completed
+        while(self.video.isOpened()):
+            # Capture frame-by-frame
+            ret, frame = self.video.read()
+            if ret == True:
+                ret, image = cv2.imencode('.jpg', frame)
+                if(self.flag < 200):
+                    self.flag += 1
+                else:
+                     
+                    image=process_frame_for_video(image)
+
+                # Display the resulting frame
+                cv2.imshow('Frame',image)
+
+                # Press Q on keyboard to  exit
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+
+            # Break the loop
+            else: 
+                break
+
+        # When everything done, release the video capture object
+        cap.release()
+
+        # Closes all the frames
+        cv2.destroyAllWindows()
+        #return image.tobytes()
