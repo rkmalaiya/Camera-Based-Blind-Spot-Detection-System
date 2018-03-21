@@ -18,7 +18,7 @@ areas = []
 orientations=11
 pixels_per_cell=16
 cells_per_block=2
-colorspace = 'YCrCb' #'RGB'
+colorspace = 'RGB' #'YCrCb' #'RGB'
 no_of_features = 1188
 
 
@@ -57,7 +57,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     
     img = img.astype(np.float32)/255
     print(img.shape)
-    img_tosearch = img[ystart:ystop,...]
+    img_tosearch = img[ystart:ystop,:,:]
 
     # apply color conversion if other than 'RGB'
     if cspace != 'RGB':

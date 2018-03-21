@@ -21,13 +21,13 @@ class VideoCamera(object):
         # so we must encode it into JPEG in order to correctly display the
         # video stream.
       
-        ret, image = cv2.imencode('.png', image)
         
         if(self.flag < 100):
                 self.flag += 1
         else:
                 image=process_frame_for_video(image)
          
+        ret, image = cv2.imencode('.png', image)
         return image.tobytes()
     
     def display_frame(self):
@@ -36,7 +36,6 @@ class VideoCamera(object):
             # Capture frame-by-frame
             ret, image = self.video.read()
             if ret == True:
-                ret, image = cv2.imencode('.png', image)
                 if(self.flag < 100):
                     self.flag += 1
                 else:
@@ -44,6 +43,7 @@ class VideoCamera(object):
                     image=process_frame_for_video(image)
 
                 # Display the resulting frame
+                #ret, image = cv2.imencode('.png', image)
                 cv2.imshow('Frame',image)
 
                 # Press Q on keyboard to  exit
