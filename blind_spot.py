@@ -56,8 +56,8 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     rectangles = []
     
     img = img.astype(np.float32)/255
-    
-    img_tosearch = img[ystart:ystop,:,:]
+    print(img.shape)
+    img_tosearch = img[ystart:ystop,...]
 
     # apply color conversion if other than 'RGB'
     if cspace != 'RGB':
