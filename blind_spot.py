@@ -11,8 +11,8 @@ from keras import utils
 from keras.models import load_model
 import time
 
-threshold = 10
-threshold += 5
+threshold = -2 # set -2 if you want threshold to be skipped
+#threshold += 5
 model = load_model('model.hdf5')
 areas = []
 orientations=11
@@ -146,6 +146,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
             test_prediction = np.argmax(svc.predict(hog_features), axis = 1)
             
             if test_prediction == 1 or show_all_rectangles:
+                print('found car')   
                 xbox_left = np.int(xleft*scale)
                 ytop_draw = np.int(ytop*scale)
                 win_draw = np.int(window*scale)
@@ -181,6 +182,7 @@ def add_heat(heatmap, bbox_list):
 
 def apply_threshold(heatmap, threshold):
     # Zero out pixels below the threshold
+    print('Threshold', threshold)
     heatmap[heatmap <= threshold] = 0
     # Return thresholded map
     return heatmap
@@ -244,15 +246,16 @@ def process_frame(img):
 # Define a class to store data from video
 
 class Vehicle_Detect():
+    memory_size = 2
     def __init__(self):
         # history of rectangles previous n frames
         self.prev_rects = [] 
         
     def add_rects(self, rects):
         self.prev_rects.append(rects)
-        if len(self.prev_rects) > 4:
+        if len(self.prev_rects) > self.memory_size:
             # throw out oldest rectangle set(s)
-            self.prev_rects = self.prev_rects[len(self.prev_rects)-4:]
+            self.prev_rects = self.prev_rects[len(self.prev_rects)-self.memory_size:]
             
 def process_frame_for_video(img):
 
@@ -269,7 +272,7 @@ def process_frame_for_video(img):
     ystop = 450
     scale = 1.5
 
-    for i in range(0,100,2):
+    for i in range(0,100,50):
         #ystart += i
         #ystop += i
         #print(img.shape)

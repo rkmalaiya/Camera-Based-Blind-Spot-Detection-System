@@ -6,10 +6,10 @@ class VideoCamera(object):
         # Using OpenCV to capture from device 0. If you have trouble capturing
         # from a webcam, comment the line below out and use a video file
         # instead.
-        self.video = cv2.VideoCapture(1)
+        #self.video = cv2.VideoCapture(1)
         # If you decide to use video.mp4, you must have this file in the folder
         # as the main.py.
-        #self.video = cv2.VideoCapture('BlindSpot.mp4')
+        self.video = cv2.VideoCapture('dataset/BlindSpot.mp4')
         self.flag = 0
     
     def __del__(self):
@@ -22,7 +22,7 @@ class VideoCamera(object):
         # video stream.
       
         
-        if(self.flag < 100):
+        if(self.flag < 10):
                 self.flag += 1
         else:
                 image=process_frame_for_video(image)
@@ -36,7 +36,7 @@ class VideoCamera(object):
             # Capture frame-by-frame
             ret, image = self.video.read()
             if ret == True:
-                if(self.flag < 100):
+                if(self.flag < 10):
                     self.flag += 1
                 else:
                      
