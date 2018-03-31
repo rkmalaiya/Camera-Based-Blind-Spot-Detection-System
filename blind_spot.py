@@ -29,7 +29,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                         vis=False, feature_vec=True):
     # Call with two outputs if vis==True
     if vis == True:
-        print(vis)
+        #print(vis)
         features, hog_image = hog(img, orientations=orient, 
                                   pixels_per_cell=(pix_per_cell, pix_per_cell),
                                   cells_per_block=(cell_per_block, cell_per_block), 
@@ -54,7 +54,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     #print(ystart, ystop)
     # array of rectangles where cars were detected
     rectangles = []
-    
+    #print(img.shape) 
     img = img.astype(np.float32)/255
     #print(img.shape)
     img_tosearch = img[ystart:ystop,:,:]
@@ -107,7 +107,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     if hog_channel == 'ALL':
         hog2 = get_hog_features(ch2, orient, pix_per_cell, cell_per_block, feature_vec=False)
         hog3 = get_hog_features(ch3, orient, pix_per_cell, cell_per_block, feature_vec=False)
-    for xb in range(10, nxsteps-10):
+    for xb in range(0, nxsteps-1): # tested value for car is (10, nxsteps -10)
        
         for yb in range(nysteps):
             ypos = yb*cells_per_step
@@ -158,7 +158,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
 def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     # Make a copy of the image
     imcopy = np.copy(img)
-    random_color = False
+    random_color = True
     # Iterate through the bounding boxes
     for bbox in bboxes:
         if color == 'random' or random_color:
@@ -182,7 +182,7 @@ def add_heat(heatmap, bbox_list):
 
 def apply_threshold(heatmap, threshold):
     # Zero out pixels below the threshold
-    print('Threshold', threshold)
+    #print('Threshold', threshold)
     heatmap[heatmap <= threshold] = 0
     # Return thresholded map
     return heatmap
@@ -224,13 +224,13 @@ def process_frame(img):
 
     ystart = 250
     ystop = 350
-    scale = 1.5
+    scale = 2
 
     for i in range(0,50,2):
         #ystart += i
         #ystop += i
         rectangles.append(find_cars(test_img, ystart+i, ystop+i, scale, colorspace, hog_channel, model, None, 
-                           orient, pix_per_cell, cell_per_block, None, None, show_all_rectangles=False))
+                           orient, pix_per_cell, cell_per_block, None, None, show_all_rectangles=True))
     
     rectangles = [item for sublist in rectangles for item in sublist] 
     
@@ -246,7 +246,7 @@ def process_frame(img):
 # Define a class to store data from video
 
 class Vehicle_Detect():
-    memory_size = 2
+    memory_size = 10
     def __init__(self):
         # history of rectangles previous n frames
         self.prev_rects = [] 
@@ -256,7 +256,10 @@ class Vehicle_Detect():
         if len(self.prev_rects) > self.memory_size:
             # throw out oldest rectangle set(s)
             self.prev_rects = self.prev_rects[len(self.prev_rects)-self.memory_size:]
-            
+           
+    def rem_rects(self):
+        self.prev_rects = []
+ 
 def process_frame_for_video(img):
 
     rectangles = []
@@ -284,6 +287,8 @@ def process_frame_for_video(img):
     # add detections to the history
     if len(rectangles) > 0:
         det.add_rects(rectangles)
+    else:
+        det.rem_rects()
     
     heatmap_img = np.zeros_like(img[:,:,0])
     for rect_set in det.prev_rects:
