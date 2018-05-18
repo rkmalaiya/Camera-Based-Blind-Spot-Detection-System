@@ -14,6 +14,8 @@ import time
 threshold = 10
 threshold += 5
 model = load_model('model.hdf5')
+blindspot_icon = cv2.imread('BlindSpotIcon.png')
+
 areas = []
 orientations=11
 pixels_per_cell=16
@@ -189,6 +191,7 @@ def apply_threshold(heatmap, threshold):
 def draw_labeled_bboxes(img, labels):
     # Iterate through all detected cars
     rects = []
+    flag = False
     for car_number in range(1, labels[1]+1):
         # Find pixels with each car_number label value
         nonzero = (labels[0] == car_number).nonzero()
@@ -207,41 +210,12 @@ def draw_labeled_bboxes(img, labels):
             areas.append(area)
         if (area > 9000):
             cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
+            flag = True
+        if(flag):
+            img[0:blindspot_icon.shape[0],0:blindspot_icon.shape[1],0:blindspot_icon.shape[2]] = blindspot_icon.copy()
+            flag = False
     # Return the image and final rectangles
     return img, rects
-
-def process_frame(img):
-
-    rectangles = []
-    global colorspace
-    #colorspace = 'RGB' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-    orient = orientations
-    pix_per_cell = pixels_per_cell
-    cell_per_block = cells_per_block
-    hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
-
-    ystart = 250
-    ystop = 350
-    scale = 1.5
-
-    for i in range(0,50,2):
-        #ystart += i
-        #ystop += i
-        rectangles.append(find_cars(test_img, ystart+i, ystop+i, scale, colorspace, hog_channel, model, None, 
-                           orient, pix_per_cell, cell_per_block, None, None, show_all_rectangles=False))
-    
-    rectangles = [item for sublist in rectangles for item in sublist] 
-    
-    heatmap_img = np.zeros_like(img[:,:,0])
-    
-    heatmap_img = add_heat(heatmap_img, rectangles)
-    heatmap_img = apply_threshold(heatmap_img, threshold)
-    
-    labels = label(heatmap_img)
-    draw_img, rects = draw_labeled_bboxes(np.copy(img), labels)
-    return draw_img
-
-# Define a class to store data from video
 
 class Vehicle_Detect():
     def __init__(self):
