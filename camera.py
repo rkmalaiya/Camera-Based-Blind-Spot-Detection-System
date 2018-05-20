@@ -8,17 +8,18 @@ class VideoCamera(object):
         # from a webcam, comment the line below out and use a video file
         # instead.
         self.video = cv2.VideoCapture(1)
-        sd = '/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
+        sd = '/home/nvidia/' #'/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
         i = 0
         
-        file_name = sd + 'output_' + i + '.avi'
+        file_name = sd + 'output_' + str(i) + '.avi'
         
         while os.path.isfile(file_name):
             i += 1
-            file_name = sd + 'output_' + i + '.avi'
+            file_name = sd + 'output_' + str(i) + '.avi'
             
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        self.videowriter = cv2.VideoWriter(file_name,fourcc, 20.0, (640,480))
+        fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
+        self.videowriter = cv2.VideoWriter(file_name,fourcc, 30.0, (640,480))
+	print('writing file at:', file_name)
 
 	# If you decide to use video.mp4, you must have this file in the folder
         # as the main.py.
@@ -39,7 +40,7 @@ class VideoCamera(object):
         if(self.flag < 10):
                 self.flag += 1
         else:
-                image=process_frame_for_video(image)
+                image=image#process_frame_for_video(image)
          
         ret, image = cv2.imencode('.png', image)
         return image.tobytes()
@@ -64,7 +65,7 @@ class VideoCamera(object):
                 self.videowriter.write(image)
                 
                 # Press Q on keyboard to  exit
-                if cv2.waitKey(25) & 0xFF == ord('q'):
+                if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
 
             # Break the loop
