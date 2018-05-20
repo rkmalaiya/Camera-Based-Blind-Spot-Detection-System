@@ -7,7 +7,8 @@ class VideoCamera(object):
         # from a webcam, comment the line below out and use a video file
         # instead.
         self.video = cv2.VideoCapture(1)
-        # If you decide to use video.mp4, you must have this file in the folder
+        self.sd = '/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
+	# If you decide to use video.mp4, you must have this file in the folder
         # as the main.py.
         #self.video = cv2.VideoCapture('dataset/BlindSpot.mp4')
         self.flag = 0
