@@ -8,7 +8,7 @@ class VideoCamera(object):
         # from a webcam, comment the line below out and use a video file
         # instead.
         self.video = cv2.VideoCapture(1)
-        sd = '/home/nvidia/' #'/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
+        sd = '/home/nvidia/' #'/media/nvidia/ext_storage/video/'
         i = 0
         
         file_name = sd + 'output_' + str(i) + '.avi'
@@ -18,7 +18,7 @@ class VideoCamera(object):
             file_name = sd + 'output_' + str(i) + '.avi'
             
         fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
-        self.videowriter = cv2.VideoWriter(file_name,fourcc, 30.0, (640,480))
+        self.videowriter = cv2.VideoWriter(file_name,fourcc, 10.0, (640,480))
 	print('writing file at:', file_name)
 
 	# If you decide to use video.mp4, you must have this file in the folder
