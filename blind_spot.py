@@ -109,7 +109,7 @@ def find_cars(img, ystart, ystop, scale, cspace, hog_channel, svc, X_scaler, ori
     if hog_channel == 'ALL':
         hog2 = get_hog_features(ch2, orient, pix_per_cell, cell_per_block, feature_vec=False)
         hog3 = get_hog_features(ch3, orient, pix_per_cell, cell_per_block, feature_vec=False)
-    for xb in range(0, nxsteps-1): # tested value for car is (10, nxsteps -10)
+    for xb in range(5, nxsteps-5): # tested value for car is (10, nxsteps -10)
        
         for yb in range(nysteps):
             ypos = yb*cells_per_step
@@ -245,8 +245,8 @@ def process_frame_for_video(img):
     cell_per_block = cells_per_block
     hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
     
-    ystart = 350
-    ystop = 450
+    ystart = 100
+    ystop = 200
     scale = 1.5
 
     for i in range(0,100,50):
