@@ -1,5 +1,6 @@
 import cv2
 from blind_spot import process_frame_for_video
+import os.path
 
 class VideoCamera(object):
     def __init__(self):
@@ -7,7 +8,18 @@ class VideoCamera(object):
         # from a webcam, comment the line below out and use a video file
         # instead.
         self.video = cv2.VideoCapture(1)
-        self.sd = '/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
+        sd = '/home/media/05a6c26c-8089-4b46-8665-d442c636a03d1/'
+        i = 0
+        
+        file_name = sd + 'output_' + i + '.avi'
+        
+        while os.path.isfile(file_name):
+            i += 1
+            file_name = sd + 'output_' + i + '.avi'
+            
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        self.videowriter = cv2.VideoWriter(file_name,fourcc, 20.0, (640,480))
+
 	# If you decide to use video.mp4, you must have this file in the folder
         # as the main.py.
         #self.video = cv2.VideoCapture('dataset/BlindSpot.mp4')
@@ -22,7 +34,8 @@ class VideoCamera(object):
         # so we must encode it into JPEG in order to correctly display the
         # video stream.
       
-        
+        image = cv2.flip(image,0)
+
         if(self.flag < 10):
                 self.flag += 1
         else:
@@ -36,6 +49,8 @@ class VideoCamera(object):
         while(self.video.isOpened()):
             # Capture frame-by-frame
             ret, image = self.video.read()
+            image = cv2.flip(image,0)
+            
             if ret == True:
                 if(self.flag < 10):
                     self.flag += 1
@@ -46,7 +61,8 @@ class VideoCamera(object):
                 # Display the resulting frame
                 #ret, image = cv2.imencode('.png', image)
                 cv2.imshow('Frame',image)
-
+                self.videowriter.write(image)
+                
                 # Press Q on keyboard to  exit
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
@@ -57,6 +73,7 @@ class VideoCamera(object):
 
         # When everything done, release the video capture object
         self.video.release()
+        self.videowriter.release()
 
         # Closes all the frames
         cv2.destroyAllWindows()
